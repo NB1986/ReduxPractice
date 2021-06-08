@@ -1,15 +1,16 @@
 import * as ActionTypes from './ActionTypes'
 
-export const addTodo = (todo) => (dispatch) => {
+export const addToDo = (todo) => (dispatch) => {
   const newTodo = {
     activity: todo,
     complete: false,
   }
-  dispatch(createTask('What should go here?'))
+  dispatch(createTask(newTodo))
 }
 
 const createTask = (todo) => ({
-  // Task: Change this object to a redux action.
+  type:ActionTypes.ADD_TODO,
+  payload: todo
 })
 
 export const toggleToDo = (id) => ({
@@ -17,10 +18,21 @@ export const toggleToDo = (id) => ({
   payload: id,
 })
 
-export const clearAllTasks = () => ({
-  type: ActionTypes.CLEAR_TASKS,
-})
+export const clearCompletedTasks = () => (dispatch) => {
+  dispatch({
+    type: ActionTypes.CLEAR_COMPLETED_TASKS
+  })
+}
 
-export const deleteAllTasks = () => ({
-  // Task: Create an object to dispatch. use an object in this file as an example
-})
+export const deleteAllTasks = () => (dispatch) => {
+  dispatch({
+    type: ActionTypes.DELETE_TASKS
+  })
+}
+
+export const removeSingle = (id) => (dispatch) => {
+  dispatch({
+    type: ActionTypes.DELETE_SINGLE,
+    payload: id
+  })
+}

@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { addTodo, clearAllTasks, toggleToDo } from './redux/ActionCreators'
-// Task:  Import functions from ActionCreators
+import { addToDo, clearCompletedTasks, toggleToDo, deleteAllTasks, removeSingle } from './redux/ActionCreators'
 
-// Task: Assign reducer to prop
 const mapStateToProps = (state) => {
-  return {}
+  console.log(state)
+  return {
+    ToDo: state.ToDo
+  }
 }
 
-// Task: add functions to dispatch
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  addToDo,
+  toggleToDo,
+  clearCompletedTasks,
+  deleteAllTasks,
+  removeSingle
+}
 
 class Main extends Component {
   constructor(props) {
@@ -21,9 +27,7 @@ class Main extends Component {
 
   handleSubmit() {
     if (this.state.todoInput.length > 0) {
-      // Task: add a new line to dispatch the state value to the action creator
-
-      //This line doesn't change
+      this.props.addToDo(this.state.todoInput)
       this.setState({ todoInput: '' })
     }
   }
@@ -33,18 +37,18 @@ class Main extends Component {
       <div className='App'>
         <h1>Redux To Do List</h1>
         <ul>
-          {/* Task: create a map that displays the list item. don't forget the unique key. we will be using the index of the array*/}
-          <li key={'unique key'}>
-            <input
-              type='checkbox'
-              // Task: replace true with the property used to show completion
-              checked={true}
-              // Task: dispatch toggle instead of console.log. Use the index of the array
-              onChange={() => console.log('Toggling')}
-            />
-            {/* Task: Replace this with task activity */}
-            {' Item'}
-          </li>
+          {this.props.ToDo.todo.map((todo, index) => <li key={index}>
+                <input
+                  type='checkbox'
+                  checked={todo.complete}
+                  // Task: dispatch toggle instead of console.log. Use the index of the array
+                  onChange={() => this.props.toggleToDo(index)}
+                />
+                {/* Task: Replace this with task activity */}
+                {todo.activity}
+                <button onClick={() => this.props.removeSingle(todo.id)}>Delete</button>
+              </li>
+          )}
 
           <div className='AddField'>
             <input
@@ -54,10 +58,10 @@ class Main extends Component {
             />
             <div>
               <button onClick={() => this.handleSubmit()}>Add Task</button>
-              <button onClick={() => alert('Replace with dispatched function for clearing values')}>
+              <button onClick={() => this.props.clearCompletedTasks()}>
                 Remove Completed
               </button>
-              <button onClick={() => alert('Replace with dispatched function for clearing the list')}>
+              <button onClick={() => this.props.deleteAllTasks()}>
                 Empty List
               </button>
             </div>
